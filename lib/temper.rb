@@ -17,30 +17,30 @@ module Temper
       @ki = options.delete(:ki)
       @kd = options.delete(:kd)
 
-      set_mode options[:mode] || :auto
-      set_direction options[:direction] || :direct
+      self.pom = options[:pom] ? true : false
+      self.mode = options[:mode] || :auto
+      self.direction = options[:direction] || :direct
     end
 
-    def control input
-      return if !@auto # manual mode
+    def control(input)
+      return unless @auto # manual mode
 
       now = Time.now.to_f
       time_change = (now - @last_time) * 1000
 
-      if time_change >= @interval
-        error = @setpoint - input
+      return unless time_change >= @interval
+      error = @setpoint - input
 
-        calculate_proportional error
-        calculate_integral error
-        calculate_derivative input
+      calculate_proportional error
+      calculate_integral error
+      calculate_derivative input
 
-        calculate_output
+      calculate_output
 
-        @last_time = now
-        @last_input = input
+      @last_time = now
+      @last_input = input
 
-        @output
-      end
+      @output
     end
 
     def calculate_proportional(error)
@@ -82,29 +82,23 @@ module Temper
       @ki = ki * interval_seconds
       @kd = kd / interval_seconds
 
-      if @direction != :direct
-        @kp = 0 - @kp
-        @ki = 0 - @ki
-        @kd = 0 - @kd
-      end
+      return if @direction == :direct
+      @kp = 0 - @kp
+      @ki = 0 - @ki
+      @kd = 0 - @kd
     end
 
-    def update_interval new_interval
-      if new_interval > 0
-        ratio = new_interval / @interval
+    def update_interval(new_interval)
+      return unless new_interval > 0
+      ratio = new_interval / @interval
 
-        @ki *= ratio
-        @kd /= ratio
-        @interval = new_interval
-      end
+      @ki *= ratio
+      @kd /= ratio
+      @interval = new_interval
     end
 
-    def set_mode mode
+    def mode=(mode)
       @auto = mode == :auto
-    end
-
-    def set_direction direction
-      @direction = direction
     end
 
     def mode
