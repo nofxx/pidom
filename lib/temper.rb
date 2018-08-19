@@ -3,15 +3,15 @@ require 'temper/version'
 module Temper
   # Le PID
   class PID
-    attr_accessor :kp, :ki, :kd, :setpoint, :direction, :output
+    attr_accessor :kp, :ki, :kd, :pom, :setpoint, :direction, :output
 
     def initialize(options = {})
-      @interval = options[:interval] || 1000
-      @last_time = 0.0
+      @interval   = options[:interval] || 1000
+      @last_time  = 0.0
       @last_input = 0.0
-      @integral_term = 0.0
-      @output_maximum = options[:maximum] || 1000
-      @output_minimum = options[:minimum] || 0
+      @output_sum = 0.0
+      @output_max = options[:maximum] || 1000
+      @output_min = options[:minimum] || 0
 
       @kp = options.delete(:kp)
       @ki = options.delete(:ki)
@@ -27,15 +27,28 @@ module Temper
 
       now = Time.now.to_f
       time_change = (now - @last_time) * 1000
-
       return unless time_change >= @interval
+
       error = @setpoint - input
+      dinput = input - @last_input
 
-      calculate_proportional error
-      calculate_integral error
-      calculate_derivative input
+      # Calculate Sum
+      @output_sum += ki * error
 
-      calculate_output
+      # Add Proportional on Measurement
+      @output_sum -= kp * dinput if pom
+
+      @output_sum = @output_max if @output_sum > @output_max
+      @output_sum = @output_min if @output_sum < @output_min
+
+      # Add Proportional on Error
+      @output = pom ? 0 : kp * error
+
+      # Finish PID
+      @output += @output_sum - kd * dinput
+
+      @output = @output_max if @output > @output_max
+      @output = @output_min if @output < @output_min
 
       @last_time = now
       @last_input = input
@@ -43,42 +56,11 @@ module Temper
       @output
     end
 
-    def calculate_proportional(error)
-      @proportional_term = @kp * error
-    end
-
-    def calculate_integral(error)
-      int = @integral_term + (@ki * error)
-
-      if int > @output_maximum
-        int = @output_maximum
-      elsif int < @output_minimum
-        int = @output_minimum
-      end
-
-      @integral_term = int
-    end
-
-    def calculate_derivative(input)
-      @derivative_term = @kd * (input - @last_input)
-    end
-
-    def calculate_output
-      out = @proportional_term + @integral_term - @derivative_term
-
-      if out > @output_maximum
-        out = @output_maximum
-      elsif out < @output_minimum
-        out = @output_minimum
-      end
-
-      @output = out
-    end
-
-    def tune kp, ki, kd
+    def tune(kp, ki, kd, pom = nil)
       return if kp < 0 || ki < 0 || kd < 0
 
-      interval_seconds = (@interval / 1000.0)
+      @pom = pom == true
+      interval_seconds = @interval / 1000.0
 
       @kp = kp
       @ki = ki * interval_seconds
