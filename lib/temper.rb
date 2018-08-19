@@ -48,13 +48,15 @@ module Temper
     end
 
     def calculate_integral(error)
-      @integral_term += @ki * error
+      int = @integral_term + (@ki * error)
 
-      if @integral_term > @output_maximum
-        @integral_term = @output_maximum
-      elsif @integral_term < @output_minimum
-        @integral_term = @output_minimum
+      if int > @output_maximum
+        int = @output_maximum
+      elsif int < @output_minimum
+        int = @output_minimum
       end
+
+      @integral_term = int
     end
 
     def calculate_derivative(input)
@@ -62,15 +64,15 @@ module Temper
     end
 
     def calculate_output
-      @output = @proportional_term + @integral_term - @derivative_term
+      out = @proportional_term + @integral_term - @derivative_term
 
-      if @output > @output_maximum
-        @output = @output_maximum
-      elsif @output < @output_minimum
-        @output = @output_minimum
+      if out > @output_maximum
+        out = @output_maximum
+      elsif out < @output_minimum
+        out = @output_minimum
       end
 
-      @output
+      @output = out
     end
 
     def tune kp, ki, kd
