@@ -1,10 +1,11 @@
-require "temper/version"
+require 'temper/version'
 
 module Temper
+  # Le PID
   class PID
     attr_accessor :kp, :ki, :kd, :setpoint, :direction, :output
 
-    def initialize options = {}
+    def initialize(options = {})
       @interval = options[:interval] || 1000
       @last_time = 0.0
       @last_input = 0.0
@@ -42,11 +43,11 @@ module Temper
       end
     end
 
-    def calculate_proportional error
+    def calculate_proportional(error)
       @proportional_term = @kp * error
     end
 
-    def calculate_integral error
+    def calculate_integral(error)
       @integral_term += @ki * error
 
       if @integral_term > @output_maximum
@@ -56,7 +57,7 @@ module Temper
       end
     end
 
-    def calculate_derivative input
+    def calculate_derivative(input)
       @derivative_term = @kd * (input - @last_input)
     end
 

@@ -1,8 +1,9 @@
 ###############
 #
-# This example uses the WiringPi-Ruby (https://github.com/WiringPi/WiringPi-Ruby) library
-# to read sensor data from GPIO 7, feed it to Temper, and adjust the heat control via PWM
-# based on the resulting power level returned from Temper.  It is controlled for 60s
+# This example uses WiringPi-Ruby (https://github.com/WiringPi/WiringPi-Ruby)
+# to read sensor data from GPIO 7, feed it to Temper, and adjust the heat
+# control via PWM based on the resulting power level returned from Temper.
+# It is controlled for 60s.
 #
 ###############
 require 'wiringpi'
@@ -20,9 +21,9 @@ pid = Temper::PID.new kp: 1.0, ki: 1.0, kd: 1.0, maximum: 100
 pid.setpoint = 175.5 # Target temp - Degrees Fahrenheit
 
 # Control temp for 60 seconds
-end = Time.now + 60
+stop = Time.now + 60
 
-while Time.now < end
+while Time.now < stop
   temperature = io.read SENSOR_PIN
   adjusted_power_level = pid.control temperature
   io.pwmWrite PWM_PIN, adjusted_power_level
