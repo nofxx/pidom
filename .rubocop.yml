@@ -1,0 +1,10 @@
+# Offense count: 3
+# Configuration parameters: MinNameLength, AllowNamesEndingInNumbers, AllowedNames, ForbiddenNames.
+# AllowedNames: io, id, to, by, on, in, at, ip
+Naming/UncommunicativeMethodParamName:
+  Exclude:
+    - 'lib/temper.rb'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/temper_spec.rb'
