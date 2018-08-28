@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Temper::PID do
-  let(:controller) { Temper::PID.new }
+describe Pidom::PID do
+  let(:controller) { Pidom::PID.new }
 
   before do
     controller.setpoint = 100.0

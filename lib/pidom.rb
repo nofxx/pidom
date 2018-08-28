@@ -1,6 +1,6 @@
-require 'temper/version'
+require 'pidom/version'
 
-module Temper
+module Pidom
   # Le PID
   class PID
     attr_accessor :kp, :ki, :kd, :pom, :setpoint, :direction, :output

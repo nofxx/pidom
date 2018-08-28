@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in temper.gemspec
+# Specify your gem's dependencies in pidom.gemspec
 gemspec

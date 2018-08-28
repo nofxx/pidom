@@ -1,15 +1,15 @@
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'temper/version'
+require 'pidom/version'
 
 Gem::Specification.new do |gem|
-  gem.name          = 'temper-control'
-  gem.version       = Temper::VERSION
-  gem.authors       = ['Andrew Nordman']
-  gem.email         = ['cadwallion@gmail.com']
-  gem.description   = 'Temperature Controller Library'
-  gem.summary       = 'Temperature controller based on the PID algorithm'
-  gem.homepage      = ''
+  gem.name          = 'pidom-control'
+  gem.version       = Pidom::VERSION
+  gem.authors       = ['Andrew Nordman', 'Marcos Piccinini']
+  gem.email         = ['pidr@pidr.com']
+  gem.description   = 'PID Control Library'
+  gem.summary       = 'Temperature/motion controller based on the PID PonM algorithm'
+  gem.homepage      = 'https://github.com/nofxx/pidom'
 
   gem.files         = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
   gem.executables   = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }

@@ -1,3 +1,3 @@
-module Temper
+module Pidom
   VERSION = '0.1.1'.freeze
 end
