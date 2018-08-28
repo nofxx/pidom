@@ -71,6 +71,11 @@ end
 
 For more examples check out the [examples](examples/) directory.
 
+## Temper
+
+This is a rewrite of 'temper-control' gem with PonM algorithm.
+
+
 ## Contributing
 
 1. Fork it
